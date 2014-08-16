@@ -25,6 +25,7 @@ Game.Systems.DistanceSystem.prototype = {
         else {
             if (this.currentDistance > this.bestDistance) {
                 this.bestDistance = this.currentDistance;
+                this.currentDistance = 0;
             }
 
             this.updateDistanceDisplay();

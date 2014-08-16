@@ -21,11 +21,16 @@ Chunks.extend = function(obj) {
 
 // SIGNAL
 
+/**
+ * A basic signal implementation.
+ * @constructor
+ */
 Chunks.Signal = function() {
     this._handlers = [];
 };
 
 Chunks.Signal.prototype = {
+
     add:function(handler, context){
         this._handlers.push({handler:handler, context:context});
     },
@@ -69,6 +74,10 @@ Chunks.Signal.prototype = {
 
 // LINKED LIST
 
+/**
+ * A basic linked list implementation
+ * @constructor
+ */
 Chunks.List = function() {
     this.head = null;
     this.tail = null;
@@ -189,7 +198,10 @@ Chunks.Iterator.prototype = {
 };
 
 // ENTITY
-
+/**
+ * An entity contains a list of components and methods for manipulating that list
+ * @constructor
+ */
 Chunks.Entity = function() {
     this.id = Chunks._ENTITY_UID++;
     this.size = 0;
@@ -200,6 +212,11 @@ Chunks.Entity = function() {
 };
 
 Chunks.Entity.prototype = {
+    /**
+     * Adds a component instance
+     * @param component instance to be added
+     * @returns {Chunks.Entity}
+     */
     add:function(component) {
         if (component.constructor._componentId !== undefined) {
             this._components[component.constructor._componentId] = component;
@@ -212,8 +229,12 @@ Chunks.Entity.prototype = {
         return this;
     },
 
-    // accepts a component instance or constructor
-    // always returns the component instance
+    /**
+     * Removes a component instance
+     * Accepts either a component instance or component class
+     * @param componentConstructorOrInstance component instance or class(constructor) to be removed
+     * @returns {*} component instance that was removed
+     */
     remove:function(componentConstructorOrInstance) {
         // constructor
         if (typeof(componentConstructorOrInstance) === "function" && componentConstructorOrInstance._componentId !== undefined) {
@@ -242,30 +263,54 @@ Chunks.Entity.prototype = {
         }
     },
 
+    /**
+     * Removes all components
+     */
     removeAll:function() {
         for (var key in this._components) {
             this.remove(this._components[key]);
         }
     },
 
-    get:function(Component, checkCache) {
-        if (checkCache === true) {
+    /**
+     * Get a component instance
+     * @param Component the class(constructor) of the component you want to get
+     * @param ignoreCache optional. ignore components that have just been removed
+     * @returns {*} the component instance
+     */
+    get:function(Component, ignoreCache) {
+        if (ignoreCache !== true) {
             return this._components[Component._componentId] || this._componentsCache[Component._componentId];
         }
         return this._components[Component._componentId];
     },
 
-    has:function(Component) {
-        return this.get(Component) !== undefined;
+    /**
+     * Check if the entity has a component
+     * @param Component the class(constructor) of the component you want to get
+     * @param ignoreCache optional. ignore components that have just been removed
+     * @returns {Boolean}
+     */
+    has:function(Component, ignoreCache) {
+        return this.get(Component, ignoreCache) !== undefined;
     },
 
+    /**
+     * Let the engine know components were added to or removed from the entity
+     * @returns {Chunks.Entity}
+     */
     update:function() {
         this._updated.dispatch(this);
 
         return this;
     },
 
-    clearCache:function() {
+    /**
+     * clears the cache of removed components
+     * removed components are cached for the duration of the frame, so systems can retrieve data from them
+     * @private
+     */
+    _clearCache:function() {
         for (var key in this._componentsCache) {
             delete this._componentsCache[key];
         }
@@ -278,6 +323,15 @@ Chunks.Entity.prototype = {
 
 // ASPECT
 
+/**
+ * An aspect has a list of entities that have certain components.
+ * @example
+ *
+ * // all entities that have a ComponentOne and ComponentTwo instance
+ * var aspect = new Chunks.engine.createAspect().all(ComponentOne, ComponentTwo)
+ *
+ * @constructor
+ */
 Chunks.Aspect = function() {
     this.entityAdded = new Chunks.Signal();
     this.entityRemoved = new Chunks.Signal();
@@ -291,6 +345,10 @@ Chunks.Aspect = function() {
 };
 
 Chunks.Aspect.prototype = {
+    /**
+     * Entities with this aspect must have all these components
+     * @returns {Chunks.Aspect}
+     */
     all:function() {
         var argArr = Array.prototype.slice.call(arguments);
 
@@ -299,6 +357,10 @@ Chunks.Aspect.prototype = {
         return this;
     },
 
+    /**
+     * Entities with this aspect must have at least one of these components
+     * @returns {Chunks.Aspect}
+     */
     any:function() {
         var argArr = Array.prototype.slice.call(arguments);
 
@@ -307,6 +369,10 @@ Chunks.Aspect.prototype = {
         return this;
     },
 
+    /**
+     * Entities with this aspect must not have any of these components
+     * @returns {Chunks.Aspect}
+     */
     none:function() {
         var argArr = Array.prototype.slice.call(arguments);
 
@@ -315,16 +381,31 @@ Chunks.Aspect.prototype = {
         return this;
     },
 
+    /**
+     * Let the engine know the parameters of this aspect have been changed, so existing entities can be added to it
+     * You only have to call this if any entities have been created before this aspect was created
+     * @returns {Chunks.Aspect}
+     */
     update:function() {
         this._updated.dispatch(this);
 
         return this;
     },
 
+    /**
+     * Call a function for every entity with this aspect
+     * @param callback function to be called. Gets the entity as an argument
+     * @param context
+     */
     forEach:function(callback, context) {
         this._entities.forEach(callback, context);
     },
 
+    /**
+     * get the first entity with this aspect
+     * Use this if there is only one entity in this aspect, like a Player
+     * @returns {*}
+     */
     getFirst:function() {
         if (this._entities.head) {
             return this._entities.head.data;
@@ -353,14 +434,14 @@ Chunks.Aspect.prototype = {
         // first, check forbidden
         i = this._forbidden.length;
         while (i--) {
-            if (entity.has(this._forbidden[i])) {
+            if (entity.has(this._forbidden[i], true)) {
                 return false;
             }
         }
         // then, check required
         i = this._required.length;
         while (i--) {
-            if (!entity.has(this._required[i])) {
+            if (!entity.has(this._required[i], true)) {
                 return false;
             }
         }
@@ -368,7 +449,7 @@ Chunks.Aspect.prototype = {
         i = this._optional.length;
         if (i > 0) {
             while (i--) {
-                if (entity.has(this._optional[i])) {
+                if (entity.has(this._optional[i], true)) {
                     return true;
                 }
             }
@@ -393,37 +474,63 @@ Chunks.Aspect.prototype = {
         delete this._optional;
         delete this._forbidden;
     },
-
+    /**
+     * get the number of entities in this aspect
+     * @returns {int}
+     */
     get size () {
         return this._entities.size;
     },
-
+    /**
+     * checks if this aspect is empty
+     * @returns {boolean}
+     */
     isEmpty:function() {
         return this.size === 0;
     }
 }
 
 // SYSTEM
-
+/**
+ * The system prototype/template
+ * @private
+ * @constructor
+ */
 Chunks.System = function() {
 
 };
 
 Chunks.System.prototype = {
+    /**
+     * called when a system is created
+     * create aspects here
+     */
     create:function() {
     },
 
+    /**
+     * called before system.update
+     * if the function returns false, update will not be called
+     * @returns {boolean} whether system.update should be called
+     */
     preUpdate:function() {
         return true;
     },
-
+    /**
+     * called if system.preUpdate return true (default)
+     */
     update:function() {
     },
-
+    /**
+     * called after update
+     * this is here mostly for symmetry
+     */
     postUpdate:function() {
 
     },
-
+    /**
+     * called by Chunks.engine.destroy()
+     */
     destroy:function() {
     }
 }
@@ -455,11 +562,17 @@ Chunks.engine = (function() {
 
     function _postUpdate() {
         _entities.forEach(function(entity) {
-            entity.clearCache();
+            entity._clearCache();
         }, this);
     }
 
     return {
+        /**
+         * create a system
+         * @param System the system constructor
+         * @param args optional arguments that will be passed to system.create
+         * @returns {System} the system that was just created
+         */
         createSystem:function(System, args) {
             Chunks.extend(System.prototype, Chunks.System.prototype);
 
@@ -472,6 +585,11 @@ Chunks.engine = (function() {
             return system;
         },
 
+        /**
+         * create an entity
+         * @param name Optional. Give the entity a name for easy debugging
+         * @returns {*|Chunks.Entity} The entity that was just created
+         */
         createEntity:function(name) {
             var entity = _entityPool.pop() || new Chunks.Entity();
 
@@ -483,6 +601,11 @@ Chunks.engine = (function() {
             return entity;
         },
 
+        /**
+         * destroy an entity
+         * this will also remove the entity from any aspect it was in
+         * @param entity the entity to be destroyed
+         */
         destroyEntity:function(entity) {
             if (_entities.remove(entity)) {
                 // first, remove all components
@@ -492,11 +615,15 @@ Chunks.engine = (function() {
                 // then clean up the entity
                 // and add it to the pool
                 entity._updated.remove(_entityUpdated);
-                entity.clearCache();
+                entity._clearCache();
                 _entityPool.unshift(entity);
             }
         },
 
+        /**
+         * create an aspect
+         * @returns {Chunks.Aspect} the aspect that was created
+         */
         createAspect:function() {
             var aspect = new Chunks.Aspect();
 
@@ -507,22 +634,39 @@ Chunks.engine = (function() {
             return aspect;
         },
 
+        /**
+         * destroy an aspect
+         * @param aspect the aspect to be destroyed
+         */
         destroyAspect:function(aspect) {
             if (_aspects.remove(aspect)) {
                 aspect._destroy();
             }
         },
 
+        /**
+         * register a component constructor with Chunks.
+         * Component constructors are given an _componentId property which is used for matching entities with aspects.
+         * @param Component
+         */
         registerComponent:function(Component) {
             Component._componentId = Chunks._COMPONENT_UID++;
         },
 
+        /**
+         * register a bunch of components at once
+         * @param components an object containing component constructors
+         */
         registerComponents:function(components) {
             for (var key in components) {
                 this.registerComponent(components[key]);
             }
         },
 
+        /**
+         * update all systems in the order they were created
+         * @param delta time between updates
+         */
         update:function(delta) {
             function updateSystem(system) {
                 if (system.preUpdate(delta) !== false) {
@@ -536,6 +680,13 @@ Chunks.engine = (function() {
             _postUpdate();
         },
 
+        /**
+         * destroy(reset) the engine
+         * all entities will be destroyed
+         * all aspects will be destroyed
+         * all systems will be destroyed
+         * components constructors will not be unregistered
+         */
         destroy:function() {
             _systems.forEach(function(system) {
                 system.destroy();

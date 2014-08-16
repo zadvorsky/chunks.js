@@ -25,7 +25,7 @@ Game.Systems.PixiRenderSystem.prototype = {
     },
 
     entityRemovedHandler:function(entity) {
-        var spriteComponent = entity.get(Game.Components.PixiSprite, true);
+        var spriteComponent = entity.get(Game.Components.PixiSprite);
         var sprite = spriteComponent.sprite;
         var parent = spriteComponent.parent;
 
