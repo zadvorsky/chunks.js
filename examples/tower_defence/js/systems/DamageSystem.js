@@ -16,6 +16,3 @@ Game.Systems.DamageSystem.prototype = {
         });
     }
 };
-
-DamageSystem.prototype = new System();
-Game.Systems.DamageSystem = DamageSystem;
