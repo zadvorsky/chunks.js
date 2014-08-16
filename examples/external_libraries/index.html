@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>sync</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <body>
+        <div id="container">
+            <canvas id="main_canvas"></canvas>
+            <div id="scoreDisplay"></div>
+        </div>
+
+        <script src="../../src/Chunks.js"></script>
+        <script src="../_libs/pixi.js"></script>
+        <script src="../_libs/p2.min.js"></script>
+
+        <script>
+            Game = {};
+            Game.Components = {};
+            Game.Systems = {};
+        </script>
+
+        <script src="js/Components.js"></script>
+        <script src="js/EntityManager.js"></script>
+        <script src="js/systems/PixiRenderSystem.js"></script>
+        <script src="js/systems/P2PhysicsSystem.js"></script>
+        <script src="js/systems/MouseDragSystem.js"></script>
+        <script src="js/systems/BackgroundSystem.js"></script>
+        <script src="js/systems/CameraSystem.js"></script>
+        <script src="js/systems/DistanceSystem.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

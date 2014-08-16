@@ -1,0 +1,27 @@
+body {
+	background-color: #bada55;
+	margin: 0;
+	overflow: hidden;
+}
+
+#container {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 512px;
+    height: 512px;
+}
+
+#scoreDisplay {
+    font-family: monospace;
+    font-size: 1em;
+    color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 500px;
+    padding: 6px;
+}

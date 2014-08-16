@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>sync</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <body>
+        <div id="container">
+            <div id="scoreDisplay"></div>
+            <canvas id="main_canvas"></canvas>
+        </div>
+
+        <!--load Chunks first-->
+        <script src="../../src/Chunks.js"></script>
+
+        <script>
+            Game = {};
+            Game.Components = {};
+            Game.Systems = {};
+        </script>
+
+        <script src="js/Components.js"></script>
+        <script src="js/EntityManager.js"></script>
+        <script src="js/systems/CircleDrawingSystem.js"></script>
+        <script src="js/systems/CollisionSystem.js"></script>
+        <script src="js/systems/PlayerControlSystem.js"></script>
+        <script src="js/systems/PositionSystem.js"></script>
+        <script src="js/systems/SpawnSystem.js"></script>
+        <script src="js/systems/WorldBoundsSystem.js"></script>
+        <!--load main last-->
+        <script src="js/main.js"></script>
+    </body>
+</html>

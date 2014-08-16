@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <title>sync</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+    </head>
+    <body>
+        <div id="container">
+
+            <div id="game_over_popup">
+                <h1><b>Game Over</b></h1>
+                <div id="replay_button">Play Again</div>
+            </div>
+
+            <canvas id="main_canvas"></canvas>
+
+            <div id="ui">
+
+                <div id="tower_buttons">
+                    <h2>Towers</h2>
+                    <div id="regular_tower" class="tower_button"></div>
+                    <div id="slowing_tower" class="tower_button"></div>
+                    <div id="explosive_tower" class="tower_button"></div>
+                </div>
+
+                <div id="info">
+                    <h2 id="tower_info_title"></h2>
+                    <div id="tower_info_stats"></div>
+                    <div id="tower_info_body"></div>
+                </div>
+
+                <div id="state">
+                    <h2 id="wave_field"></h2>
+                    <h2 id="budget_field"></h2>
+                    <h2 id="lives_field"></h2>
+                </div>
+            </div>
+        </div>
+
+        <script src="../../src/Chunks.js"></script>
+        <script src="../_libs/pixi.js"></script>
+        <script src="../_libs/TweenLite.min.js"></script>
+        <script src="../_libs/jquery-2.0.3.min.js"></script>
+        <script src="js/PixiUtils.js"></script>
+
+        <script>
+            Game = {};
+            Game.Components = {};
+            Game.Systems = {};
+        </script>
+
+        <script src="js/Components.js"></script>
+        <script src="js/EntityManager.js"></script>
+        <script src="js/systems/PixiRenderSystem.js"></script>
+        <script src="js/systems/PathFindingSystem.js"></script>
+        <script src="js/systems/InvaderMovementSystem.js"></script>
+        <script src="js/systems/PositionSystem.js"></script>
+        <script src="js/systems/TowerFiringSystem.js"></script>
+        <script src="js/systems/InvaderCollisionSystem.js"></script>
+        <script src="js/systems/ProjectileCleanupSystem.js"></script>
+        <script src="js/systems/InvaderHealthSystem.js"></script>
+        <script src="js/systems/InvaderSpawnSystem.js"></script>
+        <script src="js/systems/TowerBuildingSystem.js"></script>
+        <script src="js/systems/TargetSeekingSystem.js"></script>
+        <script src="js/systems/DamageSystem.js"></script>
+        <script src="js/systems/SlowingSystem.js"></script>
+        <script src="js/systems/AnimationSystem.js"></script>
+        <script src="js/systems/ExplosiveSystem.js"></script>
+        <script src="js/systems/GameStateSystem.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+body {
+	background-color: #bada55;
+	margin: 0;
+	overflow: hidden;
+    font-family: monospace;
+    font-size: 1em;
+}
+
+#container {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 512px;
+    height: 512px;
+}
+
+#container h2 {
+    margin: 0;
+    padding: 0;
+}
+
+#game_over_popup {
+    position: absolute;
+    top: 128px;
+    left: 64px;
+    width: 384px;
+    height: 256px;
+    background-color: white;
+}
+
+#game_over_popup h1 {
+    text-align: center;
+    font-size: 5em;
+    margin: 0;
+}
+
+#replay_button {
+    text-align: center;
+    color: white;
+    font-size: 2em;
+    width: 256px;
+    height: 64px;
+    line-height: 64px;
+    position: absolute;
+    left: 64px;
+    top: 128px;
+    background-color: #000000;
+    cursor: pointer;
+}
+
+#ui {
+    position: absolute;
+    background-color: white;
+    width: 500px;
+    height: 5em;
+    padding: 6px;
+}
+
+#tower_buttons {
+    position: absolute;
+    top: 0.5em;
+    left: 0.5em;
+    width: 12em;
+}
+
+#info {
+    position: absolute;
+    top: 0.5em;
+    left: 12.5em;
+}
+
+#state {
+    float: right;
+}
+
+#state h2 {
+    text-align: right;
+}
+
+#info div {
+    margin-top: 4px;
+}
+
+.tower_button {
+    margin-right: 0.5em;
+    width: 3em;
+    height: 3em;
+    float: left;
+    cursor: pointer;
+}
+
+.tower_button_selected {
+    outline: 4px solid red;
+}
+
+#regular_tower {background-color: #000}
+#slowing_tower {background-color: #5F9F9F}
+#explosive_tower {background-color: #FFA500}
