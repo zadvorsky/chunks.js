@@ -12,8 +12,8 @@ Every object in your game is an entity with particular components.
 These entities are grouped into aspects, which are operated on by systems.
 The game loop consists of a number of systems being updated in order, changing the data stored in the components.
 For instance, an entity may have an Image and a Position.
-The position is changed by a system that handles player input
-The image gets drawn at the position by a system that draws the screen.
+The position is changed by a system that handles player input.
+Then, the image gets drawn at the position by a system that draws the screen.
 
 ### Pros
 + Avoid problems caused by inheritance in games with many different objects.
